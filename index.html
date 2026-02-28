@@ -783,6 +783,13 @@
         ];
         // ====== END CONFIGURATION ======
 
+        // STATE VARIABLES
+        let currentUser = null;
+        let currentDay = null;
+        let scores = JSON.parse(localStorage.getItem('scores') || '{}');
+        let completedDays = JSON.parse(localStorage.getItem('completedDays') || '{}');
+        let selectedAnswer = null;
+
         // Discord OAuth Configuration
         const DISCORD_CLIENT_ID = '1474379665606049998';
         const DISCORD_REDIRECT = 'https://danglitchers.github.io/spider-event/';
