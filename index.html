@@ -351,6 +351,19 @@
         <p>כל יום ב-16:00 דלת חדשה תפתח!</p>
     </div>
 
+    <!-- PROGRESS BAR -->
+    <div style="margin-bottom: 30px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center;">
+            <span style="font-size: 0.9rem; color: #aaa;">התקדמות:</span>
+            <span style="font-size: 1.1rem; font-weight: bold; color: #ffd700;" id="progressText">0/20</span>
+        </div>
+        <div style="height: 30px; background: rgba(50, 50, 80, 0.5); border-radius: 15px; overflow: hidden; border: 2px solid rgba(255, 215, 0, 0.3); display: flex;">
+            <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #ff6b6b, #ffd700, #00ff88); width: 0%; transition: width 0.5s ease; border-radius: 13px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-weight: bold; color: white; font-size: 0.9rem;">
+                <span id="progressPercent" style="text-shadow: 0 0 5px rgba(0,0,0,0.5);">0%</span>
+            </div>
+        </div>
+    </div>
+
     <div class="user-info">
         <img id="userAvatar" class="user-avatar" alt="">
         <span class="user-name" id="userName"></span>
@@ -491,8 +504,12 @@
         const grid = document.getElementById('calendarGrid');
         grid.innerHTML = '';
 
+        let unlockedCount = 0;
+
         DAYS.forEach(day => {
             const isUnlocked = isDayUnlocked(day.day);
+            if (isUnlocked) unlockedCount++;
+            
             const timeLeft = getTimeUntilUnlock(day.day);
 
             const doorEl = document.createElement('div');
@@ -511,6 +528,12 @@
 
             grid.appendChild(doorEl);
         });
+
+        // Update progress bar
+        const percentage = Math.round((unlockedCount / 20) * 100);
+        document.getElementById('progressBar').style.width = percentage + '%';
+        document.getElementById('progressPercent').textContent = percentage + '%';
+        document.getElementById('progressText').textContent = unlockedCount + '/20';
     }
 
     function openDoor(day) {
