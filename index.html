@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 20 ימי חגיגה</title>
+    <title>🎄 20 ימי חגיגה - Advent Calendar</title>
     <style>
         * {
             margin: 0;
@@ -13,12 +13,12 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #36393F 0%, #2C2F33 50%, #1E1F22 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             color: white;
             min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Login Screen */
         .login-screen {
             min-height: 100vh;
             display: flex;
@@ -31,14 +31,12 @@
         .login-container {
             text-align: center;
             max-width: 500px;
-            space-y: 30px;
         }
 
         .login-container h1 {
             font-size: 48px;
             font-weight: 900;
             margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .login-container p {
@@ -56,10 +54,6 @@
             margin: 30px 0;
         }
 
-        .login-box p {
-            margin-bottom: 20px;
-        }
-
         .login-btn {
             width: 100%;
             background: white;
@@ -72,6 +66,10 @@
             cursor: pointer;
             transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .login-btn:hover {
@@ -79,213 +77,170 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .feature {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .feature-emoji {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .feature p {
-            font-size: 14px !important;
-            margin: 0 !important;
-        }
-
-        /* Main App */
         .app-screen {
             display: none;
         }
 
         .header {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(44, 47, 51, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px 20px;
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff6b6b, #ffd700, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        .user-info {
+            text-align: center;
+            margin-bottom: 30px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 24px;
-            font-weight: 900;
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #ffd700;
         }
 
-        .header-score {
-            background: rgba(88, 101, 242, 0.2);
-            padding: 8px 16px;
-            border-radius: 8px;
+        .user-name {
+            font-size: 1.2rem;
             font-weight: bold;
-            display: none;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .username {
-            display: none;
-            text-align: right;
-            font-size: 14px;
         }
 
         .logout-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+            background: rgba(255, 45, 85, 0.2);
+            color: #ff2d55;
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            padding: 8px 20px;
             border-radius: 8px;
-            font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            font-weight: bold;
         }
 
         .logout-btn:hover {
-            background: #c82333;
+            background: rgba(255, 45, 85, 0.3);
             transform: translateY(-2px);
-        }
-
-        /* Calendar Grid */
-        .calendar-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
         }
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 16px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .calendar-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .calendar-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 10px;
-            }
-        }
-
-        .day-button {
+        .door {
+            position: relative;
             aspect-ratio: 1;
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            border: none;
             border-radius: 12px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
-            position: relative;
-            overflow: hidden;
+            gap: 10px;
+            font-weight: bold;
+            border: 2px solid transparent;
         }
 
-        .day-button:hover:not(:disabled) {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(88, 101, 242, 0.5);
-        }
-
-        .day-button:active:not(:disabled) {
-            transform: scale(0.95);
-        }
-
-        .day-button:disabled {
-            background: #4a4d51;
-            opacity: 0.5;
+        .door.locked {
+            background: linear-gradient(135deg, #2a2a3e 0%, #3d3d5c 100%);
+            opacity: 0.6;
             cursor: not-allowed;
         }
 
-        .day-button.completed {
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
-            border: 3px solid #22c55e;
-            background: linear-gradient(135deg, #16a34a, #15803d);
+        .door.unlocked {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e72 100%);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            cursor: pointer;
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
-        .day-number {
-            font-size: 32px;
+        .door.unlocked:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 50px rgba(255, 107, 107, 0.6);
+        }
+
+        .door.unlocked.opened {
+            background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .door-number {
+            font-size: 2rem;
             font-weight: 900;
         }
 
-        .day-emoji {
-            font-size: 20px;
+        .door-emoji {
+            font-size: 3rem;
         }
 
-        .day-time {
-            font-size: 10px;
-            opacity: 0.8;
+        .door-countdown {
+            font-size: 0.75rem;
+            color: #aaa;
+            text-align: center;
+            line-height: 1.2;
         }
 
-        /* Modal */
+        .door.locked .door-countdown {
+            color: #999;
+        }
+
+        .door.unlocked .door-countdown {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
+            z-index: 5000;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(5px);
-            z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .modal-overlay.active {
+        .modal-overlay.open {
             display: flex;
         }
 
         .modal {
-            background: #36393F;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(255, 107, 107, 0.3);
             border-radius: 20px;
-            max-width: 800px;
+            padding: 40px;
             width: 100%;
-            max-height: 90vh;
+            max-width: 500px;
+            max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: slideIn 0.3s ease-out;
         }
 
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -293,46 +248,73 @@
             }
         }
 
-        .modal-header {
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            padding: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .close-btn {
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: none;
             border: none;
             color: white;
             font-size: 28px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: transform 0.2s;
         }
 
-        .close-btn:hover {
+        .modal-close:hover {
             transform: rotate(90deg);
         }
 
-        .modal-content {
-            padding: 30px;
+        .modal h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+        }
+
+        .modal p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 12px 20px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e72);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .close-btn {
+            background: rgba(100, 100, 150, 0.3);
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .close-btn:hover {
+            background: rgba(100, 100, 150, 0.5);
+            color: #ccc;
         }
 
         .video-container {
-            position: relative;
             width: 100%;
             padding-bottom: 56.25%;
             height: 0;
-            margin-bottom: 20px;
-            background: black;
-            border-radius: 12px;
+            position: relative;
             overflow: hidden;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
         .video-container iframe {
@@ -342,730 +324,237 @@
             width: 100%;
             height: 100%;
         }
-
-        .continue-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #5865F2, #4752C4);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .continue-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.4);
-        }
-
-        .questions-container {
-            space-y: 30px;
-        }
-
-        .question {
-            margin-bottom: 30px;
-        }
-
-        .question-text {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #e0e0e0;
-        }
-
-        .options {
-            display: grid;
-            gap: 10px;
-        }
-
-        .option {
-            background: #2C2F33;
-            border: 2px solid transparent;
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: right;
-            font-weight: 500;
-        }
-
-        .option:hover {
-            background: #404249;
-            border-color: #5865F2;
-        }
-
-        .option.selected {
-            background: #5865F2;
-            border-color: white;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .success-message {
-            background: rgba(34, 197, 94, 0.2);
-            border: 2px solid #22c55e;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .success-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4ade80;
-            margin-bottom: 10px;
-        }
-
-        .success-points {
-            font-size: 18px;
-            color: #86efac;
-        }
-
-        .riddle-input {
-            width: 100%;
-            background: #2C2F33;
-            border: 2px solid #404249;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .riddle-input:focus {
-            outline: none;
-            border-color: #5865F2;
-            box-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
-        }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-container">
-            <h1>🎉 20 ימי חגיגה</h1>
-            <p>תחרות על השרת שלנו</p>
-            
-            <div class="login-box">
-                <p>כדי להתחיל את ההרפתקה, התחבר עם Discord</p>
-                <button class="login-btn" onclick="loginWithDiscord()" style="background: #5865F2; color: white;">
-                    <span style="margin-right: 10px;">🎮</span> התחברות עם Discord
-                </button>
-            </div>
 
-            <div class="features">
-                <div class="feature">
-                    <div class="feature-emoji">📅</div>
-                    <p>20 ימים</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-emoji">🎮</div>
-                    <p>משחקים</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-emoji">🏆</div>
-                    <p>ניקוד</p>
-                </div>
-            </div>
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-container">
+        <h1>🎄 20 ימי חגיגה</h1>
+        <p>תחרות על השרת שלנו</p>
+        
+        <div class="login-box">
+            <p>כדי להתחיל את ההרפתקה, התחבר עם Discord</p>
+            <button class="login-btn" onclick="startDiscordOAuth()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.03.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                התחברות עם Discord
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- Main App -->
-    <div class="app-screen" id="appScreen">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <div class="header-title">
-                    🎉 20 ימי חגיגה
-                </div>
-                <div class="header-score" id="headerScore">
-                    ניקוד: <span id="totalScore">0</span>
-                </div>
-                <div class="header-right">
-                    <div class="username" id="headerUsername"></div>
-                    <button class="logout-btn" onclick="logout()">התנתקות</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Calendar -->
-        <div class="calendar-container">
-            <div class="calendar-grid" id="calendarGrid"></div>
-        </div>
+<!-- APP SCREEN -->
+<div class="app-screen" id="appScreen">
+    <div class="header">
+        <h1>🎄 20 ימי חגיגה 🎄</h1>
+        <p>כל יום ב-16:00 דלת חדשה תפתח!</p>
     </div>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal" onclick="event.stopPropagation()">
-            <div class="modal-header">
-                <div class="modal-title" id="modalTitle">יום 1</div>
-                <button class="close-btn" onclick="closeModal()">✕</button>
-            </div>
-            <div class="modal-content">
-                <div id="videoStep">
-                    <div class="video-container" id="videoContainer"></div>
-                    <button class="continue-btn" onclick="showGameStep()">
-                        ▶️ המשך למשחק
-                    </button>
-                </div>
-                <div id="gameStep" style="display: none;">
-                    <div id="questionsContainer"></div>
-                    <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">
-                        🏆 שלח תשובה
-                    </button>
-                    <div class="success-message" id="successMessage">
-                        <div class="success-title">✓ מעולה!</div>
-                        <div class="success-points" id="successPoints"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="user-info">
+        <img id="userAvatar" class="user-avatar" alt="">
+        <span class="user-name" id="userName"></span>
+        <button class="logout-btn" onclick="logout()">יציאה</button>
     </div>
 
-    <script>
-        // ====== CONFIGURATION - EDIT THIS! ======
-        const DAYS = [
-            {
-                day: 1,
-                title: 'תחילת המסע',
-                emoji: '🚀',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'מה שם השרת שלנו?', opts: ['שם1', 'שם2', 'שם3'], correct: 0 },
-                    { q: 'כמה חברים בשרת?', opts: ['100', '200', '500'], correct: 1 },
-                ],
-                points: 100,
-            },
-            {
-                day: 2,
-                title: 'יום שני',
-                emoji: '⭐',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'כמה אצבעות יש בשתי ידיים?',
-                answer: '10',
-                points: 150,
-            },
-            // ===== הוסף עוד 18 ימים כאן =====
-            {
-                day: 3,
-                title: 'יום שלישי',
-                emoji: '🎮',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה 1?', opts: ['A', 'B', 'C'], correct: 0 },
-                ],
-                points: 100,
-            },
-            {
-                day: 4,
-                title: 'יום רביעי',
-                emoji: '🎯',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 150,
-            },
-            {
-                day: 5,
-                title: 'יום חמישי',
-                emoji: '🌟',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 1 },
-                ],
-                points: 100,
-            },
-            {
-                day: 6,
-                title: 'יום שישי',
-                emoji: '🎨',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 200,
-            },
-            {
-                day: 7,
-                title: 'יום שביעי',
-                emoji: '🎪',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 0 },
-                ],
-                points: 150,
-            },
-            {
-                day: 8,
-                title: 'יום שמיני',
-                emoji: '🚀',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 150,
-            },
-            {
-                day: 9,
-                title: 'יום תשיעי',
-                emoji: '⚡',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 2 },
-                ],
-                points: 100,
-            },
-            {
-                day: 10,
-                title: 'יום עשירי',
-                emoji: '🏆',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 250,
-            },
-            {
-                day: 11,
-                title: 'יום אחד עשר',
-                emoji: '💎',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 0 },
-                ],
-                points: 100,
-            },
-            {
-                day: 12,
-                title: 'יום שנים עשר',
-                emoji: '🎭',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 150,
-            },
-            {
-                day: 13,
-                title: 'יום שלושה עשר',
-                emoji: '🌈',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 1 },
-                ],
-                points: 100,
-            },
-            {
-                day: 14,
-                title: 'יום ארבעה עשר',
-                emoji: '🎯',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 150,
-            },
-            {
-                day: 15,
-                title: 'יום חמישה עשר',
-                emoji: '🌟',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 2 },
-                ],
-                points: 100,
-            },
-            {
-                day: 16,
-                title: 'יום שישה עשר',
-                emoji: '🎪',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 200,
-            },
-            {
-                day: 17,
-                title: 'יום שבעה עשר',
-                emoji: '🚀',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 0 },
-                ],
-                points: 100,
-            },
-            {
-                day: 18,
-                title: 'יום שמונה עשר',
-                emoji: '⭐',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'riddle',
-                content: 'שאלה?',
-                answer: 'תשובה',
-                points: 150,
-            },
-            {
-                day: 19,
-                title: 'יום תשעה עשר',
-                emoji: '💫',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'שאלה?', opts: ['A', 'B', 'C'], correct: 1 },
-                ],
-                points: 100,
-            },
-            {
-                day: 20,
-                title: 'הגדול הגמר',
-                emoji: '🎉',
-                videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                gameType: 'quiz',
-                questions: [
-                    { q: 'סיימנו?', opts: ['כן!', 'לא', 'אולי'], correct: 0 },
-                ],
-                points: 500,
-            },
-        ];
-        // ====== END CONFIGURATION ======
+    <div class="calendar-grid" id="calendarGrid"></div>
+</div>
 
-        // STATE VARIABLES
-        let currentUser = null;
-        let currentDay = null;
-        let scores = JSON.parse(localStorage.getItem('scores') || '{}');
-        let completedDays = JSON.parse(localStorage.getItem('completedDays') || '{}');
-        let selectedAnswer = null;
+<!-- MODAL -->
+<div class="modal-overlay" id="doorModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h2 id="doorTitle">יום 1</h2>
+        <div id="doorContent"></div>
+        <button class="modal-btn" onclick="closeModal()">סגור</button>
+    </div>
+</div>
 
-        // Discord OAuth Configuration
-        const DISCORD_CLIENT_ID = '1474379665606049998';
-        const DISCORD_REDIRECT = 'https://danglitchers.github.io/spider-event/';
+<script>
+    const DISCORD_CLIENT_ID = '1474379665606049998';
+    const DISCORD_REDIRECT = 'https://danglitchers.github.io/spider-event/';
 
-        function loginWithDiscord() {
-            console.log("מתחיל התחברות עם Discord...");
-            console.log("Client ID:", DISCORD_CLIENT_ID);
-            console.log("Redirect:", DISCORD_REDIRECT);
-            
-            const state = Math.random().toString(36).slice(2);
-            sessionStorage.setItem("dc_state", state);
-            
-            const p = new URLSearchParams({
-                client_id: DISCORD_CLIENT_ID,
-                redirect_uri: DISCORD_REDIRECT,
-                response_type: "token",
-                scope: "identify",
-                state
+    // STATE
+    let currentUser = null;
+    let userAvatar = null;
+
+    // 20 DAYS WITH CUSTOM CONTENT
+    const DAYS = [
+        { day: 1, title: 'תחילת המסע', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'ברוכים הבאים ל-20 ימי חגיגה! 🎉' },
+        { day: 2, title: 'יום שני', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'המשחק התחיל!' },
+        { day: 3, title: 'יום שלישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'יום מס 3 כבר!' },
+        { day: 4, title: 'יום רביעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'אנחנו בחצי הדרך כמעט' },
+        { day: 5, title: 'יום חמישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'חמישה ימים מאחורנו' },
+        { day: 6, title: 'יום שישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שישה כבר!' },
+        { day: 7, title: 'יום שביעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שבוע שלם!' },
+        { day: 8, title: 'יום שמיני', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שמונה ימים עברו' },
+        { day: 9, title: 'יום תשיעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'תשע ימים!' },
+        { day: 10, title: 'יום עשירי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '10 ימים! חצי דרך!' },
+        { day: 11, title: 'יום 11', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'פחות 10 ימים' },
+        { day: 12, title: 'יום 12', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '12 ימים!' },
+        { day: 13, title: 'יום 13', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '13 ימים' },
+        { day: 14, title: 'יום 14', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שבועיים!' },
+        { day: 15, title: 'יום 15', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '15 ימים' },
+        { day: 16, title: 'יום 16', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '16 ימים' },
+        { day: 17, title: 'יום 17', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '17 ימים' },
+        { day: 18, title: 'יום 18', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '18 ימים' },
+        { day: 19, title: 'יום 19', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '19 ימים' },
+        { day: 20, title: 'הגדול הגמר! 🎉', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '20 ימים! סיימנו!' }
+    ];
+
+    function startDiscordOAuth() {
+        const state = Math.random().toString(36).slice(2);
+        sessionStorage.setItem("dc_state", state);
+        const p = new URLSearchParams({
+            client_id: DISCORD_CLIENT_ID,
+            redirect_uri: DISCORD_REDIRECT,
+            response_type: "token",
+            scope: "identify",
+            state
+        });
+        window.location.href = "https://discord.com/oauth2/authorize?" + p.toString();
+    }
+
+    async function handleDiscordCallback() {
+        const hash = window.location.hash.slice(1);
+        if (!hash) return;
+        const p = new URLSearchParams(hash);
+        const accessToken = p.get("access_token");
+        if (!accessToken) return;
+
+        history.replaceState(null, "", window.location.pathname);
+
+        try {
+            const res = await fetch("https://discord.com/api/users/@me", { 
+                headers: { Authorization: `Bearer ${accessToken}` } 
             });
+            if (!res.ok) throw new Error("Discord API error");
+            const user = await res.json();
             
-            const authUrl = "https://discord.com/oauth2/authorize?" + p.toString();
-            console.log("Auth URL:", authUrl);
+            currentUser = user.username || user.id;
+            userAvatar = user.avatar
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator||"0")%5}.png`;
             
-            window.location.href = authUrl;
-        }
-
-        // Check for Discord OAuth callback
-        async function handleDiscordCallback() {
-            console.log("בדיקת callback... URL:", window.location.href);
+            localStorage.setItem('currentUser', currentUser);
+            localStorage.setItem('userAvatar', userAvatar);
             
-            const hash = window.location.hash.slice(1);
-            console.log("Hash:", hash);
-            
-            if (!hash) {
-                console.log("אין hash, ממשיך בדף הרגיל");
-                return;
-            }
-            
-            const p = new URLSearchParams(hash);
-            const accessToken = p.get("access_token");
-            const error = p.get("error");
-            
-            console.log("Access Token:", accessToken ? "✓ יש" : "✗ אין");
-            console.log("Error:", error || "אין");
-            
-            if (error) {
-                console.error("Discord error:", error);
-                alert("❌ שגיאת Discord: " + error);
-                return;
-            }
-            
-            if (!accessToken) {
-                console.log("אין access token");
-                return;
-            }
-            
-            console.log("יש access token! מביא info...");
-            history.replaceState(null, "", window.location.pathname);
-            
-            try {
-                const res = await fetch("https://discord.com/api/users/@me", { 
-                    headers: { Authorization: `Bearer ${accessToken}` } 
-                });
-                
-                console.log("Discord API response status:", res.status);
-                
-                if (!res.ok) {
-                    const errText = await res.text();
-                    throw new Error(`Discord API error: ${res.status} - ${errText}`);
-                }
-                
-                const user = await res.json();
-                console.log("User:", user);
-                
-                const avatarUrl = user.avatar
-                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                    : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator||"0")%5}.png`;
-                
-                currentUser = user.username || user.id;
-                localStorage.setItem('currentUser', currentUser);
-                localStorage.setItem('discordUser', JSON.stringify({
-                    id: user.id,
-                    username: user.username,
-                    globalName: user.global_name || user.username,
-                    avatar: avatarUrl,
-                    accessToken
-                }));
-                
-                console.log("✓ התחברות הצליחה!");
-                showApp();
-            } catch (error) {
-                console.error('Discord login error:', error);
-                alert('❌ שגיאה בהתחברות עם Discord:\n' + error.message);
-            }
-        }
-
-        function logout() {
-            currentUser = null;
-            selectedAnswer = null;
-            localStorage.removeItem('currentUser');
-            scores = {};
-            completedDays = {};
-            localStorage.removeItem('scores');
-            localStorage.removeItem('completedDays');
-            document.getElementById('usernameInput').value = '';
-            showLogin();
-        }
-
-        function showLogin() {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('appScreen').style.display = 'none';
-        }
-
-        function showApp() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('appScreen').style.display = 'block';
-            document.getElementById('headerUsername').textContent = currentUser;
-            document.getElementById('headerUsername').style.display = 'block';
-            document.getElementById('headerScore').style.display = 'block';
-            renderCalendar();
-        }
-
-        function isDayUnlocked(dayNum) {
-            const now = new Date();
-            const today = now.getDate();
-            const hour = now.getHours();
-
-            if (dayNum < today) return true;
-            if (dayNum === today && hour >= 16) return true;
-            return false;
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-
-            DAYS.forEach(day => {
-                const isUnlocked = isDayUnlocked(day.day);
-                const isCompleted = completedDays[day.day];
-
-                const btn = document.createElement('button');
-                btn.className = 'day-button' + (isCompleted ? ' completed' : '');
-                btn.disabled = !isUnlocked;
-
-                if (isCompleted) {
-                    btn.innerHTML = `
-                        <div class="day-emoji">✓</div>
-                        <div class="day-number">${day.day}</div>
-                    `;
-                } else if (isUnlocked) {
-                    btn.innerHTML = `
-                        <div class="day-emoji">${day.emoji}</div>
-                        <div class="day-number">${day.day}</div>
-                    `;
-                    btn.onclick = () => openDay(day);
-                } else {
-                    btn.innerHTML = `
-                        <div class="day-emoji">🔒</div>
-                        <div class="day-number">${day.day}</div>
-                        <div class="day-time">16:00</div>
-                    `;
-                }
-
-                grid.appendChild(btn);
-            });
-
-            updateScore();
-        }
-
-        function updateScore() {
-            const total = Object.values(scores).reduce((a, b) => a + b, 0);
-            document.getElementById('totalScore').textContent = total;
-        }
-
-        function openDay(day) {
-            currentDay = day;
-            selectedAnswer = null;
-            document.getElementById('modalTitle').textContent = `יום ${day.day}: ${day.title}`;
-            document.getElementById('videoContainer').innerHTML = `<iframe src="${day.videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            
-            document.getElementById('videoStep').style.display = 'block';
-            document.getElementById('gameStep').style.display = 'none';
-            document.getElementById('successMessage').classList.remove('show');
-            document.getElementById('submitBtn').disabled = false;
-
-            document.getElementById('modalOverlay').classList.add('active');
-        }
-
-        function closeModal(event) {
-            if (event && event.target !== document.getElementById('modalOverlay')) return;
-            document.getElementById('modalOverlay').classList.remove('active');
-            currentDay = null;
-            selectedAnswer = null;
-        }
-
-        function showGameStep() {
-            document.getElementById('videoStep').style.display = 'none';
-            document.getElementById('gameStep').style.display = 'block';
-
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = '';
-
-            if (currentDay.gameType === 'quiz') {
-                currentDay.questions.forEach((q, idx) => {
-                    const qDiv = document.createElement('div');
-                    qDiv.className = 'question';
-                    qDiv.innerHTML = `
-                        <div class="question-text">${idx + 1}. ${q.q}</div>
-                        <div class="options">
-                            ${q.opts.map((opt, optIdx) => `
-                                <button class="option" onclick="selectOption(${idx}, ${optIdx})">
-                                    ${opt}
-                                </button>
-                            `).join('')}
-                        </div>
-                    `;
-                    container.appendChild(qDiv);
-                });
-            } else if (currentDay.gameType === 'riddle') {
-                container.innerHTML = `
-                    <div class="question-text">${currentDay.content}</div>
-                    <input type="text" class="riddle-input" id="riddleAnswer" placeholder="תשובתך...">
-                `;
-            }
-        }
-
-        function selectOption(questionIdx, optionIdx) {
-            selectedAnswer = optionIdx;
-            const options = document.querySelectorAll('.question:nth-child(' + (questionIdx + 1) + ') .option');
-            options.forEach((opt, idx) => {
-                opt.classList.toggle('selected', idx === optionIdx);
-            });
-        }
-
-        function submitAnswer() {
-            let isCorrect = false;
-
-            if (currentDay.gameType === 'quiz') {
-                // Simple check - first question's answer
-                const firstQuestion = currentDay.questions[0];
-                isCorrect = selectedAnswer === firstQuestion.correct;
-            } else if (currentDay.gameType === 'riddle') {
-                const answer = document.getElementById('riddleAnswer').value.trim();
-                isCorrect = answer.toLowerCase() === currentDay.answer.toLowerCase();
-            }
-
-            if (isCorrect || currentDay.gameType === 'riddle') {
-                completedDays[currentDay.day] = true;
-                scores[currentDay.day] = currentDay.points;
-                localStorage.setItem('scores', JSON.stringify(scores));
-                localStorage.setItem('completedDays', JSON.stringify(completedDays));
-
-                document.getElementById('submitBtn').disabled = true;
-                document.getElementById('successPoints').textContent = `+${currentDay.points} נקודות`;
-                document.getElementById('successMessage').classList.add('show');
-
-                setTimeout(() => {
-                    closeModal();
-                    renderCalendar();
-                }, 2000);
-            } else {
-                alert('תשובה שגויה! נסה שוב.');
-            }
-        }
-
-        // Initialize
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            currentUser = savedUser;
             showApp();
-        } else {
-            showLogin();
+        } catch (error) {
+            console.error('Discord login error:', error);
+            alert('❌ שגיאה בהתחברות עם Discord');
         }
+    }
 
-        // Check for Discord OAuth callback
-        handleDiscordCallback();
-    </script>
+    function showApp() {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('appScreen').style.display = 'block';
+        document.getElementById('userName').textContent = currentUser;
+        document.getElementById('userAvatar').src = userAvatar;
+        renderCalendar();
+        setInterval(renderCalendar, 60000); // Update every minute
+    }
+
+    function isDayUnlocked(dayNum) {
+        const now = new Date();
+        const today = now.getDate();
+        const hour = now.getHours();
+
+        if (dayNum < today) return true;
+        if (dayNum === today && hour >= 16) return true;
+        return false;
+    }
+
+    function getTimeUntilUnlock(dayNum) {
+        const now = new Date();
+        const today = now.getDate();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+
+        if (dayNum < today) return null;
+        if (dayNum === today && hour >= 16) return null;
+
+        if (dayNum === today) {
+            const unlockTime = new Date();
+            unlockTime.setHours(16, 0, 0, 0);
+            const diff = unlockTime - now;
+            const hours = Math.floor(diff / 3600000);
+            const mins = Math.floor((diff % 3600000) / 60000);
+            return `${hours}h ${mins}m`;
+        } else {
+            const daysLeft = dayNum - today;
+            return `${daysLeft} ימים`;
+        }
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        grid.innerHTML = '';
+
+        DAYS.forEach(day => {
+            const isUnlocked = isDayUnlocked(day.day);
+            const timeLeft = getTimeUntilUnlock(day.day);
+
+            const doorEl = document.createElement('div');
+            doorEl.className = `door ${isUnlocked ? 'unlocked' : 'locked'}`;
+            
+            if (isUnlocked) {
+                doorEl.onclick = () => openDoor(day);
+            }
+
+            const emoji = isUnlocked ? '🚪' : '🔒';
+            doorEl.innerHTML = `
+                <div class="door-emoji">${emoji}</div>
+                <div class="door-number">${day.day}</div>
+                ${timeLeft ? `<div class="door-countdown">${timeLeft}</div>` : ''}
+            `;
+
+            grid.appendChild(doorEl);
+        });
+    }
+
+    function openDoor(day) {
+        document.getElementById('doorTitle').textContent = `🎁 ${day.title}`;
+        const content = document.getElementById('doorContent');
+        content.innerHTML = `
+            <div class="video-container">
+                <iframe src="${day.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <p>${day.desc}</p>
+        `;
+        document.getElementById('doorModal').classList.add('open');
+    }
+
+    function closeModal() {
+        document.getElementById('doorModal').classList.remove('open');
+    }
+
+    function logout() {
+        currentUser = null;
+        userAvatar = null;
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userAvatar');
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('appScreen').style.display = 'none';
+    }
+
+    // Restore session
+    const savedUser = localStorage.getItem('currentUser');
+    const savedAvatar = localStorage.getItem('userAvatar');
+    if (savedUser && savedAvatar) {
+        currentUser = savedUser;
+        userAvatar = savedAvatar;
+        showApp();
+    }
+
+    // Check for OAuth callback
+    handleDiscordCallback();
+
+    // Close modal on overlay click
+    document.getElementById('doorModal').addEventListener('click', (e) => {
+        if (e.target.id === 'doorModal') closeModal();
+    });
+</script>
+
 </body>
 </html>
