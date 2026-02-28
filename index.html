@@ -785,7 +785,7 @@
 
         // Discord OAuth Configuration
         const DISCORD_CLIENT_ID = '1474379665606049998';
-        const DISCORD_REDIRECT_URI = window.location.origin;
+        const DISCORD_REDIRECT_URI = 'https://danglitchers.github.io/spider-event';
 
         function loginWithDiscord() {
             const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(DISCORD_REDIRECT_URI)}&response_type=code&scope=identify%20guilds`;
