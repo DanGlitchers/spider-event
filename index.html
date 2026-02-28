@@ -788,8 +788,13 @@
         const DISCORD_REDIRECT = 'https://danglitchers.github.io/spider-event/';
 
         function loginWithDiscord() {
+            console.log("מתחיל התחברות עם Discord...");
+            console.log("Client ID:", DISCORD_CLIENT_ID);
+            console.log("Redirect:", DISCORD_REDIRECT);
+            
             const state = Math.random().toString(36).slice(2);
             sessionStorage.setItem("dc_state", state);
+            
             const p = new URLSearchParams({
                 client_id: DISCORD_CLIENT_ID,
                 redirect_uri: DISCORD_REDIRECT,
@@ -797,26 +802,65 @@
                 scope: "identify",
                 state
             });
-            window.location.href = "https://discord.com/oauth2/authorize?" + p;
+            
+            const authUrl = "https://discord.com/oauth2/authorize?" + p.toString();
+            console.log("Auth URL:", authUrl);
+            
+            window.location.href = authUrl;
         }
 
         // Check for Discord OAuth callback
         async function handleDiscordCallback() {
+            console.log("בדיקת callback... URL:", window.location.href);
+            
             const hash = window.location.hash.slice(1);
-            if (!hash) return;
+            console.log("Hash:", hash);
+            
+            if (!hash) {
+                console.log("אין hash, ממשיך בדף הרגיל");
+                return;
+            }
+            
             const p = new URLSearchParams(hash);
             const accessToken = p.get("access_token");
-            if (!accessToken) return;
+            const error = p.get("error");
+            
+            console.log("Access Token:", accessToken ? "✓ יש" : "✗ אין");
+            console.log("Error:", error || "אין");
+            
+            if (error) {
+                console.error("Discord error:", error);
+                alert("❌ שגיאת Discord: " + error);
+                return;
+            }
+            
+            if (!accessToken) {
+                console.log("אין access token");
+                return;
+            }
+            
+            console.log("יש access token! מביא info...");
             history.replaceState(null, "", window.location.pathname);
+            
             try {
                 const res = await fetch("https://discord.com/api/users/@me", { 
                     headers: { Authorization: `Bearer ${accessToken}` } 
                 });
-                if (!res.ok) throw new Error("Discord API error");
+                
+                console.log("Discord API response status:", res.status);
+                
+                if (!res.ok) {
+                    const errText = await res.text();
+                    throw new Error(`Discord API error: ${res.status} - ${errText}`);
+                }
+                
                 const user = await res.json();
+                console.log("User:", user);
+                
                 const avatarUrl = user.avatar
                     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
                     : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator||"0")%5}.png`;
+                
                 currentUser = user.username || user.id;
                 localStorage.setItem('currentUser', currentUser);
                 localStorage.setItem('discordUser', JSON.stringify({
@@ -826,10 +870,12 @@
                     avatar: avatarUrl,
                     accessToken
                 }));
+                
+                console.log("✓ התחברות הצליחה!");
                 showApp();
             } catch (error) {
                 console.error('Discord login error:', error);
-                alert('שגיאה בהתחברות עם Discord');
+                alert('❌ שגיאה בהתחברות עם Discord:\n' + error.message);
             }
         }
 
