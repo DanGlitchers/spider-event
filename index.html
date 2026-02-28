@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎄 20 ימי חגיגה - Advent Calendar</title>
+    <title>🎄🎄 20 ימי חגיגה - Advent Calendar</title>
     <style>
         * {
             margin: 0;
@@ -508,11 +508,16 @@
             localStorage.setItem('currentUser', currentUser);
             localStorage.setItem('userAvatar', userAvatar);
             
-            // Check if admin
-            if (user.username === 'datykvuktf') {
+            // Check if admin - debug
+            console.log('Username received:', user.username);
+            console.log('Is admin check:', user.username === 'datykvuktf');
+            
+            if (user.username && user.username.toLowerCase() === 'datykvuktf') {
                 localStorage.setItem('isAdmin', 'true');
                 window.isAdmin = true;
-                console.log('👑 Admin mode activated!');
+                console.log('✅ Admin mode ACTIVATED!');
+            } else {
+                console.log('❌ Not admin. Username:', user.username);
             }
             
             showApp();
@@ -523,6 +528,7 @@
     }
 
     function showApp() {
+        console.log('showApp called. isAdmin =', window.isAdmin);
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('appScreen').style.display = 'block';
         document.getElementById('userName').textContent = currentUser;
@@ -579,6 +585,7 @@
         let unlockedCount = 0;
         const now = new Date();
         console.log('Current date/time:', now);
+        console.log('isAdmin status:', window.isAdmin);
 
         DAYS.forEach(day => {
             const isUnlocked = isDayUnlocked(day.day);
