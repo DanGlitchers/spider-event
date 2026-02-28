@@ -1,289 +1,335 @@
 import React, { useState, useEffect } from 'react';
-import { Send, Copy, Check, Code2, Zap } from 'lucide-react';
+import { Lock, Unlock, Play, Trophy, LogOut, LogIn } from 'lucide-react';
 
-export default function CodeGeniusAI() {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState(null);
+export default function DiscordAdventCalendar() {
+  const [user, setUser] = useState(null);
+  const [currentDay, setCurrentDay] = useState(null);
+  const [scores, setScores] = useState({});
+  const [completedDays, setCompletedDays] = useState({});
 
-  const extractCodeBlocks = (text) => {
-    const codeRegex = /```([\w+-]*)\n([\s\S]*?)```/g;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
+  // Discord OAuth Configuration - REPLACE THESE WITH YOUR DETAILS
+  const DISCORD_CLIENT_ID = '1474379665606049998';
+  const REDIRECT_URI = 'http://localhost:3000'; // Change to your domain
+  const DISCORD_SCOPE = 'identify guilds';
 
-    while ((match = codeRegex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        parts.push({ type: 'text', content: text.slice(lastIndex, match.index) });
-      }
-      parts.push({
-        type: 'code',
-        language: match[1] || 'plaintext',
-        content: match[2].trim()
-      });
-      lastIndex = match.index + match[0].length;
-    }
+  // 20 Days Template - REPLACE WITH YOUR DATA
+  const days = [
+    {
+      day: 1,
+      title: 'תחילת המסע',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      gameType: 'quiz',
+      questions: [
+        { q: 'מה שם השרת?', opts: ['Option 1', 'Option 2', 'Option 3'], correct: 0 },
+        { q: 'כמה חברים?', opts: ['100', '200', '500'], correct: 1 },
+      ],
+      points: 100,
+    },
+    {
+      day: 2,
+      title: 'משימת הניבוט',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      gameType: 'riddle',
+      content: 'כמה ימים יש בחודש פברואר?',
+      answer: '28',
+      points: 150,
+    },
+    // ... הוסף עוד 18 ימים
+    {
+      day: 20,
+      title: 'הגדול הגמר',
+      videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+      gameType: 'quiz',
+      questions: [
+        { q: 'סיימנו?', opts: ['כן!', 'לא', 'אולי'], correct: 0 },
+      ],
+      points: 500,
+    },
+  ];
 
-    if (lastIndex < text.length) {
-      parts.push({ type: 'text', content: text.slice(lastIndex) });
-    }
-
-    return parts.length > 0 ? parts : [{ type: 'text', content: text }];
+  // Check if day is unlocked
+  const isDayUnlocked = (dayNum) => {
+    const now = new Date();
+    const today = now.getDate();
+    const hour = now.getHours();
+    
+    if (dayNum < today) return true;
+    if (dayNum === today && hour >= 16) return true;
+    return false;
   };
 
-  const copyToClipboard = (text, index) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
+  // Discord OAuth Handler
+  const handleDiscordLogin = () => {
+    const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${DISCORD_SCOPE}`;
+    window.location.href = authUrl;
   };
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  // Simulate user login (in production, handle OAuth callback)
+  useEffect(() => {
+    const savedUser = localStorage.getItem('discordUser');
+    if (savedUser) setUser(JSON.parse(savedUser));
 
-    const userMessage = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setLoading(true);
+    const savedScores = localStorage.getItem('scores');
+    if (savedScores) setScores(JSON.parse(savedScores));
 
-    try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 2048,
-          system: "אתה ממומחה קוד בעל 20 שנות ניסיון. כשמישהו שואל אותך משהו בתכנות, אתה מספק תשובה מעמיקה, מדויקת ופרקטית. אם צריך קוד - תן דוגמה מלאה וטובה עם הסברים. השתמש בקוד blocks עם שפות מתאימות. תמיד הסבר למה זה עובד ואיך להשתמש בזה. הזכר best practices.",
-          messages: [...messages, userMessage]
-        })
-      });
+    const savedCompleted = localStorage.getItem('completedDays');
+    if (savedCompleted) setCompletedDays(JSON.parse(savedCompleted));
+  }, []);
 
-      const data = await response.json();
-      const assistantContent = data.content?.[0]?.text || 'שגיאה בקבלת תשובה';
-      
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: assistantContent,
-        hasCode: /```[\w+-]*\n[\s\S]*?```/g.test(assistantContent)
-      }]);
-    } catch (error) {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'שגיאה בחיבור ל-API. וודא שה-API key תקף.',
-        hasCode: false
-      }]);
-    }
-    setLoading(false);
+  const handleQuizComplete = (dayNum, score) => {
+    const newScores = { ...scores, [dayNum]: (scores[dayNum] || 0) + score };
+    const newCompleted = { ...completedDays, [dayNum]: true };
+    
+    setScores(newScores);
+    setCompletedDays(newCompleted);
+    localStorage.setItem('scores', JSON.stringify(newScores));
+    localStorage.setItem('completedDays', JSON.stringify(newCompleted));
   };
 
-  return (
-    <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%)',
-    }}>
-      {/* Animated grid background */}
-      <div className="fixed inset-0 opacity-20 pointer-events-none"
-           style={{
-             backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(34, 197, 94, 0.05) 25%, rgba(34, 197, 94, 0.05) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.05) 75%, rgba(34, 197, 94, 0.05) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(34, 197, 94, 0.05) 25%, rgba(34, 197, 94, 0.05) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.05) 75%, rgba(34, 197, 94, 0.05) 76%, transparent 77%, transparent)',
-             backgroundSize: '50px 50px',
-             backgroundPosition: '0 0, 25px 25px'
-           }}>
-      </div>
+  const handleLogout = () => {
+    setUser(null);
+    setScores({});
+    setCompletedDays({});
+    localStorage.removeItem('discordUser');
+    localStorage.removeItem('scores');
+    localStorage.removeItem('completedDays');
+  };
 
-      {/* Glow effects */}
-      <div className="fixed top-1/4 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
-      <div className="fixed bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" style={{animation: 'pulse 3s ease-in-out infinite'}}></div>
+  // Leaderboard calculation
+  const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
 
-      <div className="relative z-10 h-screen flex flex-col">
-        {/* Header */}
-        <header className="backdrop-blur-md bg-black/40 border-b border-green-500/20 px-8 py-6">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Code2 className="w-8 h-8 text-green-400" />
-                <Zap className="w-4 h-4 text-yellow-300 absolute -bottom-1 -right-1 animate-pulse" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-cyan-400 to-green-300">
-                  CODE GENIUS
-                </h1>
-                <p className="text-green-400/70 text-xs font-mono">פסיכיאי קוד 24/7</p>
-              </div>
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#5865F2] via-[#4752C4] to-[#36393F] flex items-center justify-center p-4">
+        <div className="text-center space-y-8 max-w-md">
+          <div className="space-y-3">
+            <h1 className="text-5xl font-black text-white drop-shadow-lg">
+              🎉 20 ימי חגיגה
+            </h1>
+            <p className="text-xl text-blue-100">
+              תחרות על השרת שלנו
+            </p>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 space-y-4">
+            <p className="text-blue-100 text-lg">
+              להתחיל את ההרפתקה, התחבר עם Discord
+            </p>
+            <button
+              onClick={handleDiscordLogin}
+              className="w-full bg-white text-[#5865F2] font-bold py-3 px-6 rounded-xl hover:bg-blue-100 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
+            >
+              <LogIn size={20} /> התחברות עם Discord
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="bg-white/10 rounded-lg p-4">
+              <div className="text-3xl">📅</div>
+              <p className="text-sm text-blue-100 mt-2">20 ימים</p>
             </div>
-          </div>
-        </header>
-
-        {/* Main chat area */}
-        <div className="flex-1 overflow-hidden flex flex-col">
-          <div className="flex-1 overflow-y-auto p-8 space-y-6 max-w-6xl mx-auto w-full">
-            {messages.length === 0 && (
-              <div className="h-full flex items-center justify-center">
-                <div className="text-center">
-                  <Code2 className="w-16 h-16 text-green-400/50 mx-auto mb-4" />
-                  <p className="text-white/60 text-lg mb-2">שלום, אני CODE GENIUS</p>
-                  <p className="text-green-400/70 font-mono text-sm">שאל לי כל שאלה בתכנות. קוד, בעיות, דיזיין - אני כאן 🚀</p>
-                </div>
-              </div>
-            )}
-
-            {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                style={{animation: `slideIn 0.3s ease-out ${idx * 0.05}s both`}}
-              >
-                <div className={`${msg.role === 'user' ? 'w-full max-w-2xl' : 'w-full'}`}>
-                  {msg.role === 'user' ? (
-                    <div className="flex justify-end">
-                      <div className="bg-gradient-to-r from-green-600/30 to-cyan-600/30 border border-green-500/40 backdrop-blur rounded-lg px-5 py-3 max-w-lg">
-                        <p className="text-white/90 font-mono text-sm leading-relaxed">{msg.content}</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-black/40 border border-green-500/20 backdrop-blur rounded-lg p-6 space-y-4">
-                      {extractCodeBlocks(msg.content).map((block, blockIdx) => (
-                        <div key={blockIdx}>
-                          {block.type === 'text' ? (
-                            <p className="text-white/80 leading-relaxed">{block.content}</p>
-                          ) : (
-                            <div className="relative group">
-                              {/* Code Block Frame */}
-                              <div className="relative bg-gradient-to-b from-green-500/10 to-cyan-500/5 rounded-xl overflow-hidden border border-green-500/30 shadow-2xl">
-                                {/* Header bar */}
-                                <div className="flex items-center justify-between px-5 py-3 bg-black/60 border-b border-green-500/20">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                  </div>
-                                  <span className="text-green-400 font-mono text-xs tracking-widest">
-                                    {block.language.toUpperCase()}
-                                  </span>
-                                  <button
-                                    onClick={() => copyToClipboard(block.content, blockIdx)}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-green-500/20 hover:bg-green-500/40 text-green-400 transition-all duration-300 text-xs font-mono border border-green-500/30"
-                                  >
-                                    {copiedIndex === blockIdx ? (
-                                      <>
-                                        <Check className="w-3.5 h-3.5" />
-                                        <span>הועתק!</span>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Copy className="w-3.5 h-3.5" />
-                                        <span>העתק</span>
-                                      </>
-                                    )}
-                                  </button>
-                                </div>
-
-                                {/* Code content */}
-                                <pre className="px-5 py-4 overflow-x-auto">
-                                  <code className="text-green-300 font-mono text-sm leading-relaxed whitespace-pre-wrap break-words">
-                                    {block.content}
-                                  </code>
-                                </pre>
-
-                                {/* Glow effect on hover */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/0 to-cyan-500/0 group-hover:from-green-500/5 group-hover:via-cyan-500/5 group-hover:to-green-500/5 transition-all duration-300 pointer-events-none rounded-xl"></div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-black/40 border border-green-500/20 backdrop-blur rounded-lg px-6 py-4">
-                  <div className="flex gap-3">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Input area */}
-          <div className="border-t border-green-500/20 bg-black/60 backdrop-blur-md p-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="שאל משהו בתכנות..."
-                  className="flex-1 px-5 py-3 rounded-lg bg-green-500/5 border border-green-500/30 text-white placeholder-white/40 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-green-400/50 focus:border-green-400/50 transition-all"
-                  disabled={loading}
-                />
-                <button
-                  onClick={handleSend}
-                  disabled={loading || !input.trim()}
-                  className="px-6 py-3 rounded-lg bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-black font-bold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  שלח
-                </button>
-              </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <div className="text-3xl">🎮</div>
+              <p className="text-sm text-blue-100 mt-2">משחקים</p>
+            </div>
+            <div className="bg-white/10 rounded-lg p-4">
+              <div className="text-3xl">🏆</div>
+              <p className="text-sm text-blue-100 mt-2">ניקוד</p>
             </div>
           </div>
         </div>
       </div>
+    );
+  }
 
-      <style>{`
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#36393F] via-[#2C2F33] to-[#1E1F22] text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[#2C2F33]/95 backdrop-blur border-b border-white/10 shadow-xl">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-black">🎉 20 ימי חגיגה</h1>
+            <div className="hidden sm:block text-sm text-blue-300">
+              ניקוד: <span className="font-bold text-xl">{totalScore}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm text-gray-400">{user.username}</p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition-all flex items-center gap-2"
+            >
+              <LogOut size={18} /> התנתקות
+            </button>
+          </div>
+        </div>
+      </header>
 
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
+      {/* Calendar Grid */}
+      <main className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {days.map((day) => {
+            const isUnlocked = isDayUnlocked(day.day);
+            const isCompleted = completedDays[day.day];
 
-        ::-webkit-scrollbar-track {
-          background: transparent;
-        }
+            return (
+              <button
+                key={day.day}
+                onClick={() => isUnlocked && setCurrentDay(day)}
+                className={`relative aspect-square rounded-xl font-bold text-lg transition-all transform hover:scale-110 active:scale-95 ${
+                  isUnlocked
+                    ? 'bg-gradient-to-br from-[#5865F2] to-[#4752C4] shadow-xl hover:shadow-2xl cursor-pointer'
+                    : 'bg-gray-700 cursor-not-allowed opacity-50'
+                } ${isCompleted ? 'ring-4 ring-green-400 shadow-green-400/50' : ''}`}
+              >
+                <div className="flex flex-col items-center justify-center h-full gap-2">
+                  {isUnlocked ? (
+                    isCompleted ? (
+                      <>
+                        <span className="text-3xl">✓</span>
+                        <span className="text-2xl">{day.day}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Unlock size={24} />
+                        <span className="text-2xl">{day.day}</span>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <Lock size={24} />
+                      <span className="text-2xl">{day.day}</span>
+                      <span className="text-xs text-gray-300">4:00 PM</span>
+                    </>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </main>
 
-        ::-webkit-scrollbar-thumb {
-          background: rgba(34, 197, 94, 0.3);
-          border-radius: 4px;
-        }
+      {/* Day Modal */}
+      {currentDay && (
+        <DayModal day={currentDay} onClose={() => setCurrentDay(null)} onComplete={handleQuizComplete} />
+      )}
+    </div>
+  );
+}
 
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(34, 197, 94, 0.5);
-        }
+function DayModal({ day, onClose, onComplete }) {
+  const [step, setStep] = useState('video');
+  const [answer, setAnswer] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
-        body {
-          direction: rtl;
-        }
+  const handleSubmitQuiz = () => {
+    if (answer !== null) {
+      setSubmitted(true);
+      setTimeout(() => {
+        onComplete(day.day, day.points);
+        onClose();
+      }, 1500);
+    }
+  };
 
-        input::placeholder {
-          direction: rtl;
-        }
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur flex items-center justify-center p-4 z-50">
+      <div className="bg-[#36393F] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-auto shadow-2xl">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#5865F2] to-[#4752C4] p-6 flex justify-between items-center sticky top-0">
+          <h2 className="text-2xl font-bold text-white">יום {day.day}: {day.title}</h2>
+          <button
+            onClick={onClose}
+            className="text-white hover:bg-white/20 p-2 rounded-lg transition"
+          >
+            ✕
+          </button>
+        </div>
 
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 0.5;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-      `}</style>
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {step === 'video' && (
+            <>
+              <div className="relative w-full bg-black rounded-lg overflow-hidden aspect-video">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={day.videoUrl}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+              <button
+                onClick={() => setStep('game')}
+                className="w-full bg-gradient-to-r from-[#5865F2] to-[#4752C4] hover:opacity-90 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                <Play size={20} /> המשך למשחק
+              </button>
+            </>
+          )}
+
+          {step === 'game' && (
+            <>
+              {day.gameType === 'quiz' && (
+                <div className="space-y-6">
+                  {day.questions.map((q, idx) => (
+                    <div key={idx} className="space-y-3">
+                      <p className="font-bold text-lg">{idx + 1}. {q.q}</p>
+                      <div className="grid gap-2">
+                        {q.opts.map((opt, optIdx) => (
+                          <button
+                            key={optIdx}
+                            onClick={() => setAnswer(optIdx)}
+                            className={`p-3 rounded-lg text-left font-semibold transition ${
+                              answer === optIdx
+                                ? 'bg-[#5865F2] border-2 border-white'
+                                : 'bg-gray-700 border-2 border-transparent hover:bg-gray-600'
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {day.gameType === 'riddle' && (
+                <div className="space-y-4">
+                  <p className="text-xl font-bold">{day.content}</p>
+                  <input
+                    type="text"
+                    placeholder="תשובתך..."
+                    value={answer || ''}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400"
+                  />
+                </div>
+              )}
+
+              {submitted && (
+                <div className="bg-green-600/20 border border-green-500 rounded-lg p-4 text-center">
+                  <p className="text-2xl font-bold text-green-400">✓ מעולה!</p>
+                  <p className="text-green-300">+{day.points} נקודות</p>
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmitQuiz}
+                disabled={submitted}
+                className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:opacity-90 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                <Trophy size={20} /> שלח תשובה
+              </button>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
