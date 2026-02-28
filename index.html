@@ -396,6 +396,7 @@
     // STATE
     let currentUser = null;
     let userAvatar = null;
+    window.isAdmin = false;
 
     // 20 DAYS WITH CUSTOM CONTENT
     const DAYS = [
@@ -419,8 +420,39 @@
             answer: '557999234932',
             desc: 'חידת הקלטות - מצא את הקוד'
         },
-        { day: 3, title: 'יום שלישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 3' },
-        { day: 4, title: 'יום רביעי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 4' },
+        { 
+            day: 3, 
+            title: 'הלוגו הראשון', 
+            intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', 
+            video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', 
+            type: 'image',
+            question: 'מה היה הלוגו של השרת הראשון שהוצאתי?',
+            images: [
+                'https://lh7-rt.googleusercontent.com/formsz/AN7BsVDp9LhQ4_fKFVMaRxESSWsaXnS2PyrRwfH_5_ZXhIvwgOihe0-2eCBwMlzkbu8HV-yCAZDu9IiXCUgdxO9JuiJmwf7H3KiBpTxsc3PTyGQqgdmmOrZ6erUu3_fkjSF1PFCuJvC7Rg3sVDtAmA4dAbZDnWHoTSQTjUE4Ow?key=VpBYCkpwNYR4RZIYn4KYV_PI',
+                'https://cdn.discordapp.com/icons/1274807320831852726/e15227ffa1a7b23783fe1a007c67d2e9.webp?size=640',
+                'https://cdn.discordapp.com/icons/1307007252560871456/9b262e97c0c17b8752332d65a5ae072d.webp?size=640',
+                'https://cdn.discordapp.com/icons/1380771172509028432/83371df276807765cb1c4f4a426e9b08.webp?size=640'
+            ],
+            imageLabels: ['לוגו 1', 'לוגו 2', 'לוגו 3', 'לוגו 4'],
+            answer: 'לוגו 1',
+            desc: 'בחר את הלוגו הראשון'
+        },
+        { 
+            day: 4, 
+            title: 'מה אוהב לאכול?', 
+            intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', 
+            video: 'https://www.youtube.com/embed/ZaowYqmgf7s', 
+            type: 'choice',
+            question: 'מה אוהב לאכול?',
+            choices: [
+                'א. אוהב לאכול פסטה',
+                'ב. אוהב לאכול מיונז',
+                'ג. אוהב לאכול פיצה',
+                'ד. אוהב לאכול המבורגר'
+            ],
+            answer: 'ד',
+            desc: 'בחר את התשובה הנכונה'
+        },
         { day: 5, title: 'יום חמישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 5' },
         { day: 6, title: 'יום שישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 6' },
         { day: 7, title: 'יום שביעי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 7' },
@@ -476,6 +508,13 @@
             localStorage.setItem('currentUser', currentUser);
             localStorage.setItem('userAvatar', userAvatar);
             
+            // Check if admin
+            if (user.username === 'datykvuktf') {
+                localStorage.setItem('isAdmin', 'true');
+                window.isAdmin = true;
+                console.log('👑 Admin mode activated!');
+            }
+            
             showApp();
         } catch (error) {
             console.error('Discord login error:', error);
@@ -493,6 +532,9 @@
     }
 
     function isDayUnlocked(dayNum) {
+        // Admin can see everything
+        if (window.isAdmin) return true;
+        
         const now = new Date();
         // Start date: tomorrow (1st March 2026) at 16:00
         const tomorrow = new Date();
@@ -612,6 +654,57 @@
         const day = window.currentDayData;
         const content = document.getElementById('doorContent');
         
+        let questionHTML = `
+            <div style="background: rgba(100, 100, 150, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px; line-height: 1.6;">${day.question}</div>
+            </div>
+        `;
+        
+        let answerHTML = '';
+        
+        if (day.type === 'text') {
+            answerHTML = `
+                <div>
+                    <input type="text" id="answerInput" placeholder="הזן את התשובה שלך..." style="width: 100%; padding: 12px; background: rgba(50, 50, 80, 0.5); border: 1px solid rgba(100, 100, 150, 0.3); border-radius: 8px; color: white; margin-bottom: 10px; font-size: 1rem;" onkeypress="if(event.key==='Enter') checkAnswer()">
+                    <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק תשובה</button>
+                </div>
+                <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+            `;
+        } else if (day.type === 'code') {
+            answerHTML = `
+                <div>
+                    <input type="text" id="answerInput" placeholder="הזן את הקוד..." style="width: 100%; padding: 12px; background: rgba(50, 50, 80, 0.5); border: 1px solid rgba(100, 100, 150, 0.3); border-radius: 8px; color: white; margin-bottom: 10px; font-size: 1rem;" onkeypress="if(event.key==='Enter') checkAnswer()">
+                    <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק קוד</button>
+                </div>
+                <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+            `;
+        } else if (day.type === 'image') {
+            answerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    ${day.images.map((img, idx) => `
+                        <div style="cursor: pointer; border: 2px solid transparent; border-radius: 8px; overflow: hidden; transition: all 0.2s;" id="img-${idx}" onclick="selectImage(${idx})">
+                            <img src="${img}" style="width: 100%; height: 120px; object-fit: cover;" alt="${day.imageLabels[idx]}">
+                            <div style="background: rgba(50, 50, 80, 0.5); padding: 8px; text-align: center; font-size: 0.85rem; color: #ccc;">${day.imageLabels[idx]}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק תשובה</button>
+                <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+            `;
+        } else if (day.type === 'choice') {
+            answerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                    ${day.choices.map((choice, idx) => `
+                        <button onclick="selectChoice('${choice.charAt(0)}')" style="padding: 15px; background: rgba(100, 100, 150, 0.2); border: 2px solid rgba(100, 100, 150, 0.3); border-radius: 8px; color: #ccc; cursor: pointer; transition: all 0.2s; text-align: right;" id="choice-${idx}">
+                            ${choice}
+                        </button>
+                    `).join('')}
+                </div>
+                <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק תשובה</button>
+                <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+            `;
+        }
+        
         content.innerHTML = `
             <div style="margin-bottom: 20px;">
                 <div style="font-size: 0.9rem; color: #999; margin-bottom: 10px;">סרטון הדלת</div>
@@ -619,23 +712,58 @@
                     <iframe src="${day.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </div>
-            
-            <div style="background: rgba(100, 100, 150, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                <div style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px; line-height: 1.6;">${day.question}</div>
-            </div>
-            
-            <div>
-                <input type="text" id="answerInput" placeholder="הזן את התשובה שלך..." style="width: 100%; padding: 12px; background: rgba(50, 50, 80, 0.5); border: 1px solid rgba(100, 100, 150, 0.3); border-radius: 8px; color: white; margin-bottom: 10px; font-size: 1rem;" onkeypress="if(event.key==='Enter') checkAnswer()">
-                <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק תשובה</button>
-            </div>
-            <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+            ${questionHTML}
+            ${answerHTML}
         `;
+        
+        window.selectedAnswer = null;
+    }
+
+    function selectImage(idx) {
+        const day = window.currentDayData;
+        // Clear previous selection
+        day.images.forEach((_, i) => {
+            const el = document.getElementById(`img-${i}`);
+            if (el) el.style.borderColor = 'transparent';
+        });
+        // Set new selection
+        const el = document.getElementById(`img-${idx}`);
+        if (el) el.style.borderColor = '#ffd700';
+        window.selectedAnswer = day.imageLabels[idx];
+    }
+
+    function selectChoice(letter) {
+        const day = window.currentDayData;
+        // Clear previous selection
+        day.choices.forEach((_, idx) => {
+            const el = document.getElementById(`choice-${idx}`);
+            if (el) el.style.borderColor = 'rgba(100, 100, 150, 0.3)';
+        });
+        // Set new selection
+        day.choices.forEach((choice, idx) => {
+            if (choice.charAt(0) === letter) {
+                const el = document.getElementById(`choice-${idx}`);
+                if (el) el.style.borderColor = '#ffd700';
+            }
+        });
+        window.selectedAnswer = letter;
     }
 
     function checkAnswer() {
         const day = window.currentDayData;
-        const input = document.getElementById('answerInput').value.trim();
         const feedback = document.getElementById('feedbackMessage');
+        
+        let input;
+        if (day.type === 'text' || day.type === 'code') {
+            input = document.getElementById('answerInput').value.trim();
+        } else if (day.type === 'image' || day.type === 'choice') {
+            input = window.selectedAnswer;
+        }
+        
+        if (!input) {
+            feedback.innerHTML = '<div style="color: #ff6b6b; font-weight: bold;">❌ בחר תשובה!</div>';
+            return;
+        }
         
         // Normalize both strings for comparison (remove extra spaces, lowercase)
         const normalizedInput = input.replace(/\s+/g, ' ').toLowerCase();
@@ -643,11 +771,15 @@
         
         if (normalizedInput === normalizedAnswer) {
             feedback.innerHTML = '<div style="color: #00ff88; font-weight: bold; font-size: 1.1rem;">✅ נכון! 🎉</div>';
-            document.getElementById('answerInput').disabled = true;
+            if (day.type === 'text' || day.type === 'code') {
+                document.getElementById('answerInput').disabled = true;
+            }
             document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
         } else {
             feedback.innerHTML = '<div style="color: #ff6b6b; font-weight: bold;">❌ לא נכון, נסה שוב...</div>';
-            document.getElementById('answerInput').value = '';
+            if (day.type === 'text' || day.type === 'code') {
+                document.getElementById('answerInput').value = '';
+            }
         }
     }
 
@@ -667,9 +799,11 @@
     // Restore session
     const savedUser = localStorage.getItem('currentUser');
     const savedAvatar = localStorage.getItem('userAvatar');
+    const savedAdmin = localStorage.getItem('isAdmin');
     if (savedUser && savedAvatar) {
         currentUser = savedUser;
         userAvatar = savedAvatar;
+        if (savedAdmin === 'true') window.isAdmin = true;
         showApp();
     }
 
