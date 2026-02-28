@@ -785,43 +785,51 @@
 
         // Discord OAuth Configuration
         const DISCORD_CLIENT_ID = '1474379665606049998';
-        const DISCORD_REDIRECT_URI = 'https://your-vercel-project.vercel.app/api/discord-callback'; // החלף בURL של Vercel
-        const API_ENDPOINT = 'https://your-vercel-project.vercel.app/api/discord-callback'; // החלף בURL של Vercel
+        const DISCORD_REDIRECT = 'https://danglitchers.github.io/spider-event/';
 
         function loginWithDiscord() {
-            const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(API_ENDPOINT)}&response_type=code&scope=identify`;
-            window.location.href = authUrl;
+            const state = Math.random().toString(36).slice(2);
+            sessionStorage.setItem("dc_state", state);
+            const p = new URLSearchParams({
+                client_id: DISCORD_CLIENT_ID,
+                redirect_uri: DISCORD_REDIRECT,
+                response_type: "token",
+                scope: "identify",
+                state
+            });
+            window.location.href = "https://discord.com/oauth2/authorize?" + p;
         }
 
         // Check for Discord OAuth callback
         async function handleDiscordCallback() {
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get('code');
-
-            if (code) {
-                try {
-                    // Get user data from our backend API
-                    const response = await fetch(`${API_ENDPOINT}?code=${code}`);
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.success) {
-                            currentUser = data.user.username || data.user.id;
-                            localStorage.setItem('currentUser', currentUser);
-                            localStorage.setItem('discordUser', JSON.stringify(data.user));
-                            
-                            // Clean the URL
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                            
-                            showApp();
-                        }
-                    } else {
-                        alert('שגיאה בהתחברות עם Discord');
-                    }
-                } catch (error) {
-                    console.error('Discord login error:', error);
-                    alert('שגיאה בהתחברות עם Discord');
-                }
+            const hash = window.location.hash.slice(1);
+            if (!hash) return;
+            const p = new URLSearchParams(hash);
+            const accessToken = p.get("access_token");
+            if (!accessToken) return;
+            history.replaceState(null, "", window.location.pathname);
+            try {
+                const res = await fetch("https://discord.com/api/users/@me", { 
+                    headers: { Authorization: `Bearer ${accessToken}` } 
+                });
+                if (!res.ok) throw new Error("Discord API error");
+                const user = await res.json();
+                const avatarUrl = user.avatar
+                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                    : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator||"0")%5}.png`;
+                currentUser = user.username || user.id;
+                localStorage.setItem('currentUser', currentUser);
+                localStorage.setItem('discordUser', JSON.stringify({
+                    id: user.id,
+                    username: user.username,
+                    globalName: user.global_name || user.username,
+                    avatar: avatarUrl,
+                    accessToken
+                }));
+                showApp();
+            } catch (error) {
+                console.error('Discord login error:', error);
+                alert('שגיאה בהתחברות עם Discord');
             }
         }
 
