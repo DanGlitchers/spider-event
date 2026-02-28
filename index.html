@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎄🎄 20 ימי חגיגה - Advent Calendar</title>
+    <title>🎄 20 ימי חגיגה - Advent Calendar</title>
     <style>
         * {
             margin: 0;
@@ -476,18 +476,24 @@
 
     function isDayUnlocked(dayNum) {
         const now = new Date();
-        const startDate = new Date(2026, 1, 28, 16, 0, 0); // 28/02/2026 at 16:00
+        // CHANGE THIS DATE to when you want Day 1 to open
+        // Format: new Date(year, month-1, day, hour, minute, second)
+        // Example: new Date(2026, 1, 28, 16, 0, 0) = 28/02/2026 at 16:00
+        const startDate = new Date(2026, 1, 28, 16, 0, 0); // Day 1 opens at 28/02/2026 16:00
         
         // Calculate the unlock time for this day
+        // Day 1 = 28/02/2026 16:00
+        // Day 2 = 01/03/2026 16:00
+        // Day 3 = 02/03/2026 16:00, etc
         const unlockTime = new Date(startDate);
-        unlockTime.setDate(unlockTime.getDate() + (dayNum - 1)); // Day 1 = 28/02, Day 2 = 01/03, etc
+        unlockTime.setDate(unlockTime.getDate() + (dayNum - 1));
         
         return now >= unlockTime;
     }
 
     function getTimeUntilUnlock(dayNum) {
         const now = new Date();
-        const startDate = new Date(2026, 1, 28, 16, 0, 0); // 28/02/2026 at 16:00
+        const startDate = new Date(2026, 1, 28, 16, 0, 0); // Day 1 opens at 28/02/2026 16:00
         
         // Calculate the unlock time for this day
         const unlockTime = new Date(startDate);
@@ -512,12 +518,16 @@
         grid.innerHTML = '';
 
         let unlockedCount = 0;
+        const now = new Date();
+        console.log('Current date/time:', now);
 
         DAYS.forEach(day => {
             const isUnlocked = isDayUnlocked(day.day);
             if (isUnlocked) unlockedCount++;
             
             const timeLeft = getTimeUntilUnlock(day.day);
+            
+            if (day.day <= 3) console.log(`Day ${day.day}: unlocked=${isUnlocked}, timeLeft=${timeLeft}`);
 
             const doorEl = document.createElement('div');
             doorEl.className = `door ${isUnlocked ? 'unlocked' : 'locked'}`;
@@ -543,6 +553,8 @@
 
             grid.appendChild(doorEl);
         });
+
+        console.log(`Unlocked: ${unlockedCount}/20`);
 
         // Update progress bar
         const percentage = Math.round((unlockedCount / 20) * 100);
