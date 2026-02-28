@@ -399,26 +399,44 @@
 
     // 20 DAYS WITH CUSTOM CONTENT
     const DAYS = [
-        { day: 1, title: 'תחילת המסע', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'ברוכים הבאים ל-20 ימי חגיגה! 🎉' },
-        { day: 2, title: 'יום שני', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'המשחק התחיל!' },
-        { day: 3, title: 'יום שלישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'יום מס 3 כבר!' },
-        { day: 4, title: 'יום רביעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'אנחנו בחצי הדרך כמעט' },
-        { day: 5, title: 'יום חמישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'חמישה ימים מאחורנו' },
-        { day: 6, title: 'יום שישי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שישה כבר!' },
-        { day: 7, title: 'יום שביעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שבוע שלם!' },
-        { day: 8, title: 'יום שמיני', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שמונה ימים עברו' },
-        { day: 9, title: 'יום תשיעי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'תשע ימים!' },
-        { day: 10, title: 'יום עשירי', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '10 ימים! חצי דרך!' },
-        { day: 11, title: 'יום 11', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'פחות 10 ימים' },
-        { day: 12, title: 'יום 12', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '12 ימים!' },
-        { day: 13, title: 'יום 13', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '13 ימים' },
-        { day: 14, title: 'יום 14', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: 'שבועיים!' },
-        { day: 15, title: 'יום 15', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '15 ימים' },
-        { day: 16, title: 'יום 16', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '16 ימים' },
-        { day: 17, title: 'יום 17', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '17 ימים' },
-        { day: 18, title: 'יום 18', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '18 ימים' },
-        { day: 19, title: 'יום 19', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '19 ימים' },
-        { day: 20, title: 'הגדול הגמר! 🎉', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', desc: '20 ימים! סיימנו!' }
+        { 
+            day: 1, 
+            title: 'ההודעה הראשונה', 
+            intro: 'https://www.youtube.com/embed/XSS0vfgHiQo',
+            video: 'https://www.youtube.com/embed/XSS0vfgHiQo',
+            type: 'text',
+            question: 'וואי וואי, אני כבר ממזמן שחכתי מה ההודעה הראשונה בעדכונים, מצאו אותה, עשו לcopy ושלחו אותה פה',
+            answer: 'עדכון ראשוןברוכים הבאים לשרת שלנו',
+            desc: 'מצאו את ההודעה הראשונה בעדכונים'
+        },
+        { 
+            day: 2, 
+            title: 'חידת הקלטות', 
+            intro: 'https://www.youtube.com/embed/XSS0vfgHiQo',
+            video: 'https://www.youtube.com/embed/KT4uGU5dNg0',
+            type: 'code',
+            question: 'וואי פתאום אני נזכר בכל החידות שהייתי עושה לכם, איזה כיף 🎵<br><br>בכל קלטת יש קוד בעל 3 ספרות. חברו לפי הסדר את הספרות ומצאו את הקוד!',
+            answer: '557999234932',
+            desc: 'חידת הקלטות - מצא את הקוד'
+        },
+        { day: 3, title: 'יום שלישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 3' },
+        { day: 4, title: 'יום רביעי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 4' },
+        { day: 5, title: 'יום חמישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 5' },
+        { day: 6, title: 'יום שישי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 6' },
+        { day: 7, title: 'יום שביעי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 7' },
+        { day: 8, title: 'יום שמיני', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 8' },
+        { day: 9, title: 'יום תשיעי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 9' },
+        { day: 10, title: 'יום עשירי', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום מס 10' },
+        { day: 11, title: 'יום 11', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 11' },
+        { day: 12, title: 'יום 12', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 12' },
+        { day: 13, title: 'יום 13', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 13' },
+        { day: 14, title: 'יום 14', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 14' },
+        { day: 15, title: 'יום 15', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 15' },
+        { day: 16, title: 'יום 16', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 16' },
+        { day: 17, title: 'יום 17', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 17' },
+        { day: 18, title: 'יום 18', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 18' },
+        { day: 19, title: 'יום 19', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'שאלה?', answer: 'תשובה', desc: 'יום 19' },
+        { day: 20, title: 'הגדול הגמר! 🎉', intro: 'https://www.youtube.com/embed/XSS0vfgHiQo', video: 'https://www.youtube.com/embed/dQw4w9WgXcQ', type: 'text', question: 'סיימנו?', answer: 'כן', desc: '20 ימים! סיימנו!' }
     ];
 
     function startDiscordOAuth() {
@@ -476,15 +494,12 @@
 
     function isDayUnlocked(dayNum) {
         const now = new Date();
-        // CHANGE THIS DATE to when you want Day 1 to open
-        // Format: new Date(year, month-1, day, hour, minute, second)
-        // Example: new Date(2026, 1, 28, 16, 0, 0) = 28/02/2026 at 16:00
-        const startDate = new Date(2026, 1, 28, 16, 0, 0); // Day 1 opens at 28/02/2026 16:00
+        // Start date: tomorrow (1st March 2026) at 16:00
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const startDate = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 16, 0, 0);
         
         // Calculate the unlock time for this day
-        // Day 1 = 28/02/2026 16:00
-        // Day 2 = 01/03/2026 16:00
-        // Day 3 = 02/03/2026 16:00, etc
         const unlockTime = new Date(startDate);
         unlockTime.setDate(unlockTime.getDate() + (dayNum - 1));
         
@@ -493,7 +508,9 @@
 
     function getTimeUntilUnlock(dayNum) {
         const now = new Date();
-        const startDate = new Date(2026, 1, 28, 16, 0, 0); // Day 1 opens at 28/02/2026 16:00
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const startDate = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), 16, 0, 0);
         
         // Calculate the unlock time for this day
         const unlockTime = new Date(startDate);
@@ -573,13 +590,65 @@
     function openDoor(day) {
         document.getElementById('doorTitle').textContent = `🎁 ${day.title}`;
         const content = document.getElementById('doorContent');
+        
+        // Show intro video first
         content.innerHTML = `
-            <div class="video-container">
-                <iframe src="${day.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: #999; margin-bottom: 10px;">סרטון intro</div>
+                <div class="video-container">
+                    <iframe src="${day.intro}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <button onclick="showDoorContent()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #ff6b6b, #ff8e72); color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer;">המשך לשאלה →</button>
             </div>
-            <p>${day.desc}</p>
         `;
+        
+        // Store the current day for later
+        window.currentDayData = day;
+        
         document.getElementById('doorModal').classList.add('open');
+    }
+
+    function showDoorContent() {
+        const day = window.currentDayData;
+        const content = document.getElementById('doorContent');
+        
+        content.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: #999; margin-bottom: 10px;">סרטון הדלת</div>
+                <div class="video-container">
+                    <iframe src="${day.video}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            
+            <div style="background: rgba(100, 100, 150, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
+                <div style="font-size: 0.9rem; color: #ccc; margin-bottom: 10px; line-height: 1.6;">${day.question}</div>
+            </div>
+            
+            <div>
+                <input type="text" id="answerInput" placeholder="הזן את התשובה שלך..." style="width: 100%; padding: 12px; background: rgba(50, 50, 80, 0.5); border: 1px solid rgba(100, 100, 150, 0.3); border-radius: 8px; color: white; margin-bottom: 10px; font-size: 1rem;" onkeypress="if(event.key==='Enter') checkAnswer()">
+                <button onclick="checkAnswer()" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #00ff88, #00cc6a); color: black; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">✓ בדוק תשובה</button>
+            </div>
+            <div id="feedbackMessage" style="margin-top: 15px; text-align: center;"></div>
+        `;
+    }
+
+    function checkAnswer() {
+        const day = window.currentDayData;
+        const input = document.getElementById('answerInput').value.trim();
+        const feedback = document.getElementById('feedbackMessage');
+        
+        // Normalize both strings for comparison (remove extra spaces, lowercase)
+        const normalizedInput = input.replace(/\s+/g, ' ').toLowerCase();
+        const normalizedAnswer = day.answer.replace(/\s+/g, ' ').toLowerCase();
+        
+        if (normalizedInput === normalizedAnswer) {
+            feedback.innerHTML = '<div style="color: #00ff88; font-weight: bold; font-size: 1.1rem;">✅ נכון! 🎉</div>';
+            document.getElementById('answerInput').disabled = true;
+            document.querySelector('button[onclick="checkAnswer()"]').disabled = true;
+        } else {
+            feedback.innerHTML = '<div style="color: #ff6b6b; font-weight: bold;">❌ לא נכון, נסה שוב...</div>';
+            document.getElementById('answerInput').value = '';
+        }
     }
 
     function closeModal() {
